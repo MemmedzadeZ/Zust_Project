@@ -1,0 +1,20 @@
+﻿@model AllFriendsViewModel
+<div id="alert" class="alert alert-info" style="display:none;"></div>
+
+<div class="contact-body" id="allUsers" data-simplebar>
+
+
+    @foreach(var item in Model.Friends)
+    {
+        <div class="contact-item">
+            <a href="#">
+                <img src="@(!string.IsNullOrEmpty(item.Image) ? Url.Content(item.Image) : Url.Content("~/images/user/user.png"))"
+                     class="rounded-circle"
+                     alt="image">
+            </a>
+            <span class="name"><a href="#">@item.UserName</a></span>
+            <span class=@(item.IsOnline?"status-online":"status-offline")></span>
+        </div>
+    }  
+</div>
+

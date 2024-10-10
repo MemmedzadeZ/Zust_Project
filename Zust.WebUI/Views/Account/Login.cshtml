@@ -1,0 +1,66 @@
+﻿@model LoginViewModel
+@{
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+<div class="profile-authentication-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="profile-authentication-image">
+                    <div class="content-image">
+                        <div class="logo">
+                            <a asp-action="Index" asp-controller="Home"><img src="~/assets/images/logo.png" alt="Zust"></a>
+                        </div>
+                        <div class="vector-image">
+                            <img src="~/assets/images/vector.png" alt="image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-md-12">
+                <div class="login-form">
+                    <h2>Login</h2>
+
+                    <form asp-action="Login" asp-controller="Account" method="post">
+                        <div class="form-group">
+                            <label asp-for="UsernameOrEmail" >Username or email</label>
+                            <input asp-for="UsernameOrEmail"  type="text" class="form-control">
+                             <span asp-validation-for="UsernameOrEmail"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password">Password</label>
+                            <input asp-for="Password" type="password" class="form-control">
+                        <span asp-validation-for="Password"></span>
+                        </div>
+                        <p>
+                            <input asp-for="RememberMe" type="checkbox">
+                            <label asp-for="RememberMe">Remember me</label>
+                        </p>
+                        <div class="remember-me-wrap d-flex justify-content-between align-items-center">
+                          
+
+                            <div class="lost-your-password-wrap">
+                                <a asp-action="ForgotPassword" asp-controller="Home" class="lost-your-password">Forgot password ?</a>
+            
+                            </div> 
+                            <div class="lost-your-password-wrap">
+                                <a asp-action="Register" asp-controller="Account" class="lost-your-password">Do you not have account ?</a>
+
+                            </div>
+                          
+                        </div>
+                        <button type="submit" class="default-btn">Login</button>
+                        <div class="or-text"><span>Or</span></div>
+                        <button type="submit" class="google-btn">Log In with Google</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="home-btn-icon">
+        <a asp-action="Index" asp-controller="Home"><i class="flaticon-home"></i></a>
+    </div>
+</div>
