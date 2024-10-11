@@ -13,18 +13,7 @@ namespace Zust.Entity.Entities
 
         public string? Firstname {  get; set; }
         public string? Lastname {  get; set; }
-        public string? Fullname {
-            get => Firstname + " " + Lastname;
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    var names = value.Split(" ");
-                    Firstname = names.First();
-                    Lastname = names.Length > 1 ? names.Last() : "";  
-                }
-            }
-        }
+        
         public DateTime Birthday { get; set; }
         public string? Occupation { get; set; }  
         public string? Language { get; set; }
@@ -39,10 +28,27 @@ namespace Zust.Entity.Entities
         public List<Comment>? Comments { get; set; }
         public List<Comment>? Posts { get; set; }
 
+        public virtual ICollection<Friend>? Friends { get; set; }
+        public virtual ICollection<FriendRequest>? FriendRequests { get; set; }
+        public string? Fullname
+        {
+            get => Firstname + " " + Lastname;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    var names = value.Split(" ");
+                    Firstname = names.First();
+                    Lastname = names.Length > 1 ? names.Last() : "";
+                }
+            }
+        }
         public CustomUser()
         {
 
             Id = Guid.NewGuid().ToString();
+            Friends = new List<Friend>();
+            FriendRequests = new List<FriendRequest>(); 
         }
     }
 }

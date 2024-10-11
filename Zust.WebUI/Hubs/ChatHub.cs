@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using System.Data;
 using Zust.Entity.Data;
 using Zust.Entity.Entities;
 
@@ -27,14 +28,15 @@ namespace Zust.WebUI.Hubs
                 if (userItem != null)
                 {
                     userItem.IsOnline = true;
+                    userItem.ConnectTime = DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString();
                     await _context.SaveChangesAsync();
+
+                    string info = user.UserName + " connected successfully";
+                    await Clients.Others.SendAsync("UserStatusChanged", user.Id, true); // Broadcast online status
+
+                    await base.OnConnectedAsync();
                 }
             }
-
-            await base.OnConnectedAsync();
-
-            //   string info = user.UserName + " connected successfully";
-            //  await Clients.Others.SendAsync("Connect", info);
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
@@ -46,15 +48,17 @@ namespace Zust.WebUI.Hubs
                 if (userItem != null)
                 {
                     userItem.IsOnline = false;
+                    userItem.ConnectTime = DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString();
                     await _context.SaveChangesAsync();
+
+                    string info = user.UserName + " disconnected successfully";
+                    await Clients.Others.SendAsync("UserStatusChanged", user.Id, false); // Broadcast offline status
+
+                    await base.OnDisconnectedAsync(exception);
                 }
             }
-
-            await base.OnDisconnectedAsync(exception);
-
-            //  string info = user.UserName + " diconnected successfully";
-            //  await Clients.Others.SendAsync("Disconnect", info);
         }
+
 
         public async Task SendFollow(string id)
         {

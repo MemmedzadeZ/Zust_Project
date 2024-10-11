@@ -1,9 +1,9 @@
-﻿//using Zust.Entity.Entities;
+﻿using Zust.Entity.Entities;
 
-//namespace Zust.WebUI.Models
-//{
-//    public class PostPartialViewModel
-//    {
-//        public Post? Post { get; set; }
-//    };
-//}
+namespace Zust.WebUI.Models
+{
+    public class PostPartialViewModel
+    {
+        public Post? Post { get; set; }
+    };
+}
