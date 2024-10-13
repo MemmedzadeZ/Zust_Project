@@ -13,5 +13,9 @@ namespace Zust.Business.Abstract
         Task<List<FriendRequest>> GetFriendRequests(string userId);
         Task AcceptFriendRequest(int requestId);
         Task DeclineFriendRequest(int requestId);
+        void AddRequest(FriendRequest model); // Sorğu əlavə et
+        FriendRequest GetRequestById(int requestId); // Sorğunu ID-yə görə al
+        void UpdateRequest(FriendRequest model); // Sorğunu yenilə
+
     }
 }

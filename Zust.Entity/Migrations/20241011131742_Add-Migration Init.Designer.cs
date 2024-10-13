@@ -12,8 +12,8 @@ using Zust.Entity.Data;
 namespace Zust.Entity.Migrations
 {
     [DbContext(typeof(ZustDbContext))]
-    [Migration("20241002180700_Init13")]
-    partial class Init13
+    [Migration("20241011131742_Add-Migration Init")]
+    partial class AddMigrationInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -142,6 +142,9 @@ namespace Zust.Entity.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CustomUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -159,6 +162,8 @@ namespace Zust.Entity.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomUserId");
 
                     b.HasIndex("PostId");
 
@@ -208,6 +213,9 @@ namespace Zust.Entity.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BackgroundImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Birthday")
@@ -313,6 +321,27 @@ namespace Zust.Entity.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Zust.Entity.Entities.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("OwnId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YourFriendId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("YourFriendId");
+
+                    b.ToTable("Friends");
+                });
+
             modelBuilder.Entity("Zust.Entity.Entities.FriendRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -321,8 +350,47 @@ namespace Zust.Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAccepted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Statust")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("FriendRequest");
+                });
+
+            modelBuilder.Entity("Zust.Entity.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceiverId")
                         .HasColumnType("nvarchar(max)");
@@ -332,7 +400,7 @@ namespace Zust.Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FriendRequests");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Zust.Entity.Entities.Post", b =>
@@ -349,7 +417,7 @@ namespace Zust.Entity.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageOrVideoUrl")
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LikeCount")
@@ -368,6 +436,9 @@ namespace Zust.Entity.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VideoUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -429,6 +500,10 @@ namespace Zust.Entity.Migrations
 
             modelBuilder.Entity("Zust.Entity.Entities.Comment", b =>
                 {
+                    b.HasOne("Zust.Entity.Entities.CustomUser", null)
+                        .WithMany("Posts")
+                        .HasForeignKey("CustomUserId");
+
                     b.HasOne("Zust.Entity.Entities.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
@@ -452,6 +527,24 @@ namespace Zust.Entity.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Zust.Entity.Entities.Friend", b =>
+                {
+                    b.HasOne("Zust.Entity.Entities.CustomUser", "YourFriend")
+                        .WithMany("Friends")
+                        .HasForeignKey("YourFriendId");
+
+                    b.Navigation("YourFriend");
+                });
+
+            modelBuilder.Entity("Zust.Entity.Entities.FriendRequest", b =>
+                {
+                    b.HasOne("Zust.Entity.Entities.CustomUser", "Sender")
+                        .WithMany("FriendRequests")
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Zust.Entity.Entities.Post", b =>
                 {
                     b.HasOne("Zust.Entity.Entities.CustomUser", "User")
@@ -466,6 +559,12 @@ namespace Zust.Entity.Migrations
             modelBuilder.Entity("Zust.Entity.Entities.CustomUser", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("FriendRequests");
+
+                    b.Navigation("Friends");
+
+                    b.Navigation("Posts");
                 });
 
             modelBuilder.Entity("Zust.Entity.Entities.Post", b =>

@@ -318,6 +318,27 @@ namespace Zust.Entity.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Zust.Entity.Entities.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("OwnId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("YourFriendId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("YourFriendId");
+
+                    b.ToTable("Friends");
+                });
+
             modelBuilder.Entity("Zust.Entity.Entities.FriendRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -326,8 +347,47 @@ namespace Zust.Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsAccepted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Statust")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("FriendRequest");
+                });
+
+            modelBuilder.Entity("Zust.Entity.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReceiverId")
                         .HasColumnType("nvarchar(max)");
@@ -337,7 +397,7 @@ namespace Zust.Entity.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FriendRequests");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Zust.Entity.Entities.Post", b =>
@@ -464,6 +524,24 @@ namespace Zust.Entity.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Zust.Entity.Entities.Friend", b =>
+                {
+                    b.HasOne("Zust.Entity.Entities.CustomUser", "YourFriend")
+                        .WithMany("Friends")
+                        .HasForeignKey("YourFriendId");
+
+                    b.Navigation("YourFriend");
+                });
+
+            modelBuilder.Entity("Zust.Entity.Entities.FriendRequest", b =>
+                {
+                    b.HasOne("Zust.Entity.Entities.CustomUser", "Sender")
+                        .WithMany("FriendRequests")
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Zust.Entity.Entities.Post", b =>
                 {
                     b.HasOne("Zust.Entity.Entities.CustomUser", "User")
@@ -478,6 +556,10 @@ namespace Zust.Entity.Migrations
             modelBuilder.Entity("Zust.Entity.Entities.CustomUser", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("FriendRequests");
+
+                    b.Navigation("Friends");
 
                     b.Navigation("Posts");
                 });

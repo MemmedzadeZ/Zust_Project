@@ -14,7 +14,7 @@ namespace Zust.Entity.Entities
 
         public string? SenderId { get; set; } 
         public string? ReceiverId { get; set; } 
-        //public bool IsAccepted { get; set; } 
+        public bool IsAccepted { get; set; } 
         public virtual CustomUser? Sender { get; set; }   
       
     }

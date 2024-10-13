@@ -43,6 +43,9 @@ namespace Zust.Entity.Entities
                 }
             }
         }
+
+        public bool HasRequestPending { get; set; }
+
         public CustomUser()
         {
 

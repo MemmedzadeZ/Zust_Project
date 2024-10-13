@@ -43,3 +43,11 @@ connection.on("Disconnect", function (info) {
         }, 5000);
     }
 });
+
+connection.on("SendFollow", function () {
+    GetMyRequests();
+    GetAllUsers();
+})
+async function SendFollowCall(id) {
+    await connection.invoke("SendFollow", id);
+}

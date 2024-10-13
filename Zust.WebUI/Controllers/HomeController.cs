@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Zust.Business.Abstract;
 using Zust.Business.Concrete;
+using Zust.Entity.Data;
 using Zust.Entity.Entities;
 using Zust.WebUI.Models;
 
@@ -20,10 +21,11 @@ namespace Zust.WebUI.Controllers
         private readonly IFriendService _friendService;
         private readonly IPostService _postService;
         private readonly IImageService _imageService;
+        private readonly ZustDbContext _context;
         //private readonly INotificationService _notificationService;
 
 
-        public HomeController(ILogger<HomeController> logger, UserManager<CustomUser> userManager, IUserService userService, IFriendService friendService, IPostService postService, IImageService imageService, SignInManager<CustomUser> signInManager)
+        public HomeController(ILogger<HomeController> logger, UserManager<CustomUser> userManager, IUserService userService, IFriendService friendService, IPostService postService, IImageService imageService, SignInManager<CustomUser> signInManager, ZustDbContext context)
         {
             _logger = logger;
             _userManager = userManager;
@@ -32,6 +34,7 @@ namespace Zust.WebUI.Controllers
             _postService = postService;
             _imageService = imageService;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public IActionResult ForgotPassword()
@@ -65,12 +68,25 @@ namespace Zust.WebUI.Controllers
 
             await _friendService.Add(friendRequest);
          }
-        [HttpPost]
-        public async Task<IActionResult> SendRequest(string receiverId)
-        {
-            await SendFriendRequest(receiverId);
-            return Ok();
-        }
+
+     
+    
+        //[HttpPost]
+        //public IActionResult SendRequest(AllFriendsViewModel model)
+        //{
+        //    // Sorğu məlumatlarını "pending" statusu ilə qeyd edirik.
+        //    model.Status = "pending";
+
+        //    // Verilənlər bazasına sorğu əlavə edilir və ya hansısa xidmət vasitəsilə sorğu göndərilir.
+        //    // Məsələn:
+        //    _friendService.AddRequest(model);
+
+        //    // Alıcıya bildiriş göndər (simulyasiya kimi əlavə edə bilərsən).
+        //    // Bildiriş göndərmə funksiyası:
+        //    _friendService.NotifyUser(model.receiverId, "Yeni sorğu gəldi. Qəbul et və ya rədd et.");
+
+        //    return RedirectToAction("PendingRequests"); // Sorğu göndərildikdən sonra "pending" səhifəsinə yönəldirik.
+        //}
 
         public async Task<IActionResult> MyProfile()
         {
@@ -143,12 +159,14 @@ namespace Zust.WebUI.Controllers
         {
          
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            var myrequests = _context.FriendRequests.Where(r => r.SenderId == user.Id);
+
         
             var datas = await _userService.GetAll(user.Id);
 
 
 
-            var users = datas
+            var users = await _context.Users
                 .Where(u => u.Id != user.Id)
                 .OrderByDescending(u => u.IsOnline)
                 .Select(u => new CustomUser
@@ -158,8 +176,9 @@ namespace Zust.WebUI.Controllers
                     UserName = u.UserName,
                     Image = u.Image,
                     Email = u.Email,
-
-                });
+                    HasRequestPending = (myrequests.FirstOrDefault(r => r.ReceiverId == u.Id && r.Statust == "Request")!= null)
+                })
+            .ToListAsync();
 
             return Ok(users);
             }
@@ -181,6 +200,37 @@ namespace Zust.WebUI.Controllers
             return View();
         }
 
+        public async Task<IActionResult> SendFollow(string id)
+        {
+            var sender = await _userManager.GetUserAsync(HttpContext.User);
+            var receiverUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if(receiverUser != null)
+            {
+                _context.FriendRequests.Add(new FriendRequest
+                {
+                    Content = $"{sender.UserName} sent friend request at {DateTime.Now.ToLongDateString()}",
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    ReceiverId = id,
+                    Statust = "Request"
+
+                });
+                await _context.SaveChangesAsync();
+                return Ok();
+
+               
+            }
+
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> GetAllRequests()
+        {
+
+            var current = await _userManager.GetUserAsync(HttpContext.User);
+            var requests = _context.FriendRequests.Where(r => r.ReceiverId == current.Id);
+            return Ok(requests);
+        }
         //Notification
 
 

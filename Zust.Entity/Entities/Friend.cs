@@ -11,9 +11,9 @@ namespace Zust.Entity.Entities
 
         public int Id { get; set; }
 
-        public string? OwnId {  get; set; }
+        public string? OwnId { get; set; }
         public string? YourFriendId { get; set; }
 
-        public virtual CustomUser? YourFriend {  get; set; }
+        public virtual CustomUser? YourFriend { get; set; }
     }
 }
