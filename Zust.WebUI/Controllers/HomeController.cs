@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using Zust.Business.Abstract;
 using Zust.Business.Concrete;
 using Zust.Entity.Data;
@@ -182,6 +183,63 @@ namespace Zust.WebUI.Controllers
 
             return Ok(users);
             }
+
+        [HttpDelete]
+
+        public async Task<IActionResult> TakeRequest(string id)
+        {
+            var current = await _userManager.GetUserAsync(HttpContext.User);
+            var request = await _context.FriendRequests.FirstOrDefaultAsync(r => r.SenderId == current.Id && r.ReceiverId == id);
+            if (request == null) return NotFound();
+            _context.FriendRequests.Remove(request);
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+
+        //[HttpDelete]
+
+        //public async Task<IActionResult> UnFollowRequest(string id)
+        //{
+        //    var current = await _userManager.GetUserAsync(HttpContext.User);
+        //    var friend = _context.Friends.FirstOrDefaultAsync(f => f.OwnId == current.Id && f.YourFriendId == id ||
+        //    f.OwnId == id && f.YourFriendId == current.Id
+        //    );
+        //    if (friend == null) return NotFound();
+        //    _context.Friends.Remove(friend);
+        //    await _context.SaveChangesAsync();
+        //    return Ok();
+
+        //}
+
+        public async Task<IActionResult> DeclineRequest(int id,string senderId)
+        {
+            try
+            {
+                var request = await _context.FriendRequests.FirstOrDefaultAsync(r => r.Id == id);
+                _context.FriendRequests.Remove(request);
+
+                var current = await _userManager.GetUserAsync(HttpContext.User);
+                _context.FriendRequests.Add(new FriendRequest
+                {
+                    SenderId = current.Id,
+                    Sender = current,
+                    ReceiverId = senderId,
+                    Statust ="Notification",
+                    Content =$"{current.UserName} declined your friend request at {DateTime.Now.ToLongDateString()} {DateTime.Now.ToShortTimeString()}"
+                });
+
+                await _context.SaveChangesAsync();
+                return Ok();
+
+                
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         public async Task<IActionResult> SendFollow(string id)
         {
             var sender = await _userManager.GetUserAsync(HttpContext.User);

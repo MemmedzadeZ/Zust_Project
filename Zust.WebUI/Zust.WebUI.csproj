@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Friend\**" />
+    <Compile Remove="Views\Profile\**" />
+    <Content Remove="Views\Friend\**" />
+    <Content Remove="Views\Profile\**" />
+    <EmbeddedResource Remove="Views\Friend\**" />
+    <EmbeddedResource Remove="Views\Profile\**" />
+    <None Remove="Views\Friend\**" />
+    <None Remove="Views\Profile\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
@@ -23,11 +34,6 @@
   <ItemGroup>
 	  <ProjectReference Include="..\Zust.Buisnes\Zust.Business.csproj" />
 	  <ProjectReference Include="..\Zust.Entity\Zust.Entity.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Friend\" />
-    <Folder Include="Views\Profile\" />
   </ItemGroup>
  
   
