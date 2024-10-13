@@ -182,24 +182,6 @@ namespace Zust.WebUI.Controllers
 
             return Ok(users);
             }
- 
-
-        public async Task<IActionResult> Weather()
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            ViewBag.User = user;
-            return View();
-        }
-
-      
-  
-        public async Task<IActionResult> Messages()
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            ViewBag.User = user;
-            return View();
-        }
-
         public async Task<IActionResult> SendFollow(string id)
         {
             var sender = await _userManager.GetUserAsync(HttpContext.User);
@@ -223,6 +205,7 @@ namespace Zust.WebUI.Controllers
 
             return BadRequest();
         }
+ 
 
         public async Task<IActionResult> GetAllRequests()
         {
@@ -231,6 +214,23 @@ namespace Zust.WebUI.Controllers
             var requests = _context.FriendRequests.Where(r => r.ReceiverId == current.Id);
             return Ok(requests);
         }
+
+        public async Task<IActionResult> Weather()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            ViewBag.User = user;
+            return View();
+        }
+
+      
+  
+        public async Task<IActionResult> Messages()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            ViewBag.User = user;
+            return View();
+        }
+
         //Notification
 
 

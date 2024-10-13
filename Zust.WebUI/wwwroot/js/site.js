@@ -6,30 +6,96 @@
             console.log(data);
             let content = "";
 
-            for (var i = 0; i < data.length; i++) {
-                const style = data[i].isOnline ? 'status-online' : 'status-offline';
+            for (let i = 0; i < data.length; i++) {
+                let style = '';
 
-                const item = `
-                    <div class="card" style="${style}; width:300px; margin-top:50px; margin-right:30px">
-                        <img style="width:100%; height:250px;" src="/images/${data[i].image}" />
-                        <div class="card-body">
-                            <h5 class="card-title">${data[i].userName}</h5>
-                            <p class="card-text">${data[i].email}</p>
-                            <button class="btn btn-primary follow-btn" data-id="${data[i].id}" onclick ="SendFollow('${data[i].id}')">
-                                Follow
-                            </button>
+                var usersListDiv = document.getElementById("users-list");
+                var status = (data[i].isOnline) ? "online" : "offline";
+                if (data[i].hasRequestPending) {
+                    subContent = `
+                     <div class='add-friend-btn'>
+                    <button class='btn btn-outline-secondary' onclick="TakeRequest('${data[i].id}')">Already Sent</button>
+                                </div>`;
+                }
+                else {
+                    if (data[i].isFriend) {
+                        subContent = `
+                         <div class='add-friend-btn'>
+                        <button class='btn btn-outline-secondary' onclick="UnfollowRequest('${data[i].id}')">UnFollow</button>
+                                </div>
+                                <div class='send-message-btn'>
+                        <a class='btn btn-outline-secondary m-2' href='/Home/GoChat/${data[i].id}' >Send Message</a>
+                                </div>`;
+                    }
+                    else {
+                        subContent = `
+                         <div class='add-friend-btn'>
+                        <button class='btn btn-outline-primary' onclick="SendFollow('${data[i].id}')">Follow</button>          
+                                </div>
+                        `;
+                    }
+                }
+
+
+                var content = "";
+
+
+                let item = `
+             <div class='col-lg-3 col-sm-6'>
+                <div class='single-friends-card'>
+                        <div class='friends-image'>
+                            <a href='#'>
+                                <img src='~/assets/images/friends/friends-bg-1.jpg' alt='image'>
+                            </a>
+                            <div class='icon'>
+                                <a href='#'><i class='flaticon-user'></i></a>
+                            </div>
                         </div>
-                    </div>`;
+                        <div class='friends-content'>
+                            <div class='friends-info d-flex justify-content-between align-items-center'>
+                                <a href='#'>
+                                    <img src=${data[i].profileImageUrl} alt='image'>
+                                </a>
+                                <div class='text ms-3'>
+                                    <h3><a href='#'>${data[i].userName}</a></h3>
+                                    <span>${status}</span>
+                                </div>
+                            </div>
+                            <ul class='statistics'>
+                                <li>
+                                    <a href='#'>
+                                        <span class='item-number'>862</span>
+                                        <span class='item-text'>Likes</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href='#'>
+                                        <span class='item-number'>91</span>
+                                        <span class='item-text'>Following</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href='#'>
+                                        <span class='item-number'>514</span>
+                                        <span class='item-text'>Followers</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class='button-group d-flex justify-content-between align-items-center'>
+                               
+                                   ${subContent}
+                             
+                            </div>
+                        </div>
+                </div>
+             </div>
+                   `;
                 content += item;
             }
+               
 
-            $("#allUsers").html(content);
-
-            // Attach event listeners for follow buttons
-            $(".follow-btn").on("click", function () {
-                const userId = $(this).data("id");
-                sendFriendRequest(userId);
-            });
+            $("#users-list").html(content);
+          
         }
     });
 }
@@ -102,46 +168,6 @@ function GetMyRequests() {
 
         }
     })
-}
-function sendFriendRequest(receiverId) {
-    $.ajax({
-        url: `/Home/SendRequest/?receiverId=${receiverId}&senderId=${senderId}`,
-        method: 'POST',
-        success: function (response) {
-            let content = "";
-            for (var i = 0; i < response.messages.length; i++) {
-                let dateTime = new Date(response.messages[i].dateTime);
-                let hour = dateTime.getHours();
-                let minute = dateTime.getMinutes();
-                let item = '';
-                if (response.messages[i].receiverId == response.currentUserId) {
-                    item = `<section style="display:flex;margin-top:25px;border:2px solid black;
-    margin-left:10px;border-radius:10px;background-color:lightgrey;min-width:20%;max-width:50%;">
-
-                                            <h5 style="margin-left:10px;margin-top:15px;margin-right:10px;font-size:1em;">${data.messages[i].content}</h5>
-                                            <p style="margin-top:20px;margin-right:10px;font-size:0.9em">${hour}:${minute}</p>
-                                        
-                                        </section>`;
-
-                }
-                else {
-                    item = `<section style="display:flex;margin-top:25px;border:2px solid black;
-    margin-left:50%;border-radius:10px;background-color:blue;min-width:20%;max-width:50%;">
-
-                                            <h5 style="margin-left:10px;margin-top:15px;margin-right:10px;font-size:1em;color:white">${data.messages[i].content}</h5>
-                                            <p style="margin-top:20px;margin-right:10px;font-size:0.9em;color:white">${hour}:${minute}</p>
-                                        
-                                        </section>`;
-                }
-                content += item;
-            }
-            console.log(data);
-            $("#currentMessages").html(content);
-        },
-        error: function (error) {
-            console.error('Error occurred:', error);
-        }
-    });
 }
 
 setInterval(GetAllUsers, 1000);
