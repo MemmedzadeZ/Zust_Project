@@ -1,17 +1,29 @@
-﻿@model AllFriendsViewModel
+﻿<link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/assets/css/animate.min.css">
+<link rel="stylesheet" href="~/assets/css/remixicon.css">
+<link rel="stylesheet" href="~/assets/css/flaticon.css">
+<link rel="stylesheet" href="~/assets/css/jquery-ui.min.css">
+<link rel="stylesheet" href="~/assets/css/magnific-popup.min.css">
+<link rel="stylesheet" href="~/assets/css/simplebar.min.css">
+<link rel="stylesheet" href="~/assets/css/metismenu.min.css">
+<link rel="stylesheet" href="~/assets/css/owl.carousel.min.css">
+<link rel="stylesheet" href="~/assets/css/owl.theme.default.min.css">
+<link rel="stylesheet" href="~/assets/css/style.css">
+<link rel="stylesheet" href="~/assets/css/responsive.css">
 
 <div class="content-page-box-area">
     <div class="page-banner-box bg-4">
-        <h3 style="color:aqua">Friends</h3>
+        <h3>Friends</h3>
     </div>
 
     <div class="friends-inner-box-style d-flex justify-content-between align-items-center margin-top-25">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
+
             <li class="nav-item">
-                <a class="nav-link active" id="friend-requests-tab" data-bs-toggle="tab" href="#friend-requests" role="tab" aria-controls="friend-requests">Friend Requests</a>
+                <a class="nav-link" id="friend-requests-tab" data-bs-toggle="tab" href="#friend" role="tab" aria-controls="friend-requests">People</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="people-you-know-tab" data-bs-toggle="tab" href="#people-you-know" role="tab" aria-controls="people-you-know">People You Know</a>
+                <a class="nav-link" id="people-you-know-tab" data-bs-toggle="tab" href="#friend-requests" role="tab" aria-controls="people-you-know">Friends</a>
             </li>
         </ul>
 
@@ -24,33 +36,29 @@
     </div>
 
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="friend-requests" role="tabpanel">
-            
-            <div class="load-more-posts-btn">
-                <a href="#"><i class="flaticon-loading"></i> Load More</a>
+        <div class="tab-pane fade show active" id="friends" role="tabpanel">
+            <div class="row justify-content-center">
             </div>
         </div>
-
-        <div class="tab-pane fade" id="people-you-know" role="tabpanel">
-            <div class="row justify-content-center">
-               
-            </div>
-
-                <div id="users-list" class="row justify-content-center">
-                </div>
+        <div id="users-list" class="row justify-content-center">
         </div>
     </div>
-</div>
-    <script src="~/assets/js/jquery.min.js"></script>
-    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/js/jquery.magnific-popup.min.js"></script>
-    <script src="~/assets/js/jquery-ui.min.js"></script>
-    <script src="~/assets/js/simplebar.min.js"></script>
-    <script src="~/assets/js/metismenu.min.js"></script>
-    <script src="~/assets/js/owl.carousel.min.js"></script>
-    <script src="~/assets/js/wow.min.js"></script>
-    <script src="~/assets/js/main.js"></script>
-    <script src="~/images/user"></script>
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
 
-    <script src="~/js/site.js"></script>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="friend-requests" role="tabpanel">
+            <div class="row justify-content-center">
+                <div id="request-list" class="row justify-content-center">
+                </div>
+
+
+
+            </div>
+            @*
+            <div class="load-more-posts-btn">
+            <a href="#"><i class="flaticon-loading"></i> Load More</a>
+            </div> *@
+        </div>
+
+
+    </div>
+</div>

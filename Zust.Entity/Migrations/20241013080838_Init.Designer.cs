@@ -12,8 +12,8 @@ using Zust.Entity.Data;
 namespace Zust.Entity.Migrations
 {
     [DbContext(typeof(ZustDbContext))]
-    [Migration("20241011131742_Add-Migration Init")]
-    partial class AddMigrationInit
+    [Migration("20241013080838_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -256,6 +256,9 @@ namespace Zust.Entity.Migrations
 
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("HasRequestPending")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Zust.Entity.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMigrationInit : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,7 @@ namespace Zust.Entity.Migrations
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AboutMe = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Fullname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HasRequestPending = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

@@ -1,11 +1,12 @@
 ﻿function GetAllUsers() {
     $.ajax({
-        url: "Home/GetAllUsers",
+        url: "/Home/GetAllUsers",
         method: "GET",
         success: function (data) {
-            console.log(data);
-            let content = "";
 
+
+            let subContent = '';
+            console.log("heloooo")
             for (let i = 0; i < data.length; i++) {
                 let style = '';
 
@@ -92,12 +93,11 @@
                    `;
                 content += item;
             }
-               
-
             $("#users-list").html(content);
-          
         }
-    });
+
+    })
+
 }
 
 GetAllUsers();
@@ -169,5 +169,50 @@ function GetMyRequests() {
         }
     })
 }
+
+
+function GetMessages(receiverId, senderId) {
+    var container = document.querySelector("#chat-container");
+    $.ajax({
+
+        url: `/Home/GetAllMessages?receiverId=${receiverId}&senderId=${senderId}`,
+        method: "GET",
+        success: function (data) {
+            var chat = ``;
+            var list = ``;
+            for (var i = 0; i < data.messages.length; i++) {
+                if (receiverId == data.currentUserId) {
+                    chat = `
+                <div class="chat">
+                    <div class="chat chat-left">
+                        <div class="chat-avatar">
+                            <a routerLink="/profile" class="d-inline-block">
+                                <img src="~/assets/images/user/user-8.jpg" width="50" height="50" class="rounded-circle" alt="image">
+                            </a>
+                        </div>
+
+                        <div class="chat-body">
+                            <div class="chat-message">
+                                <p>${messages[i].content}</p>
+                                <span class="time d-block">${messages[i].dateTime}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+
+
+
+                }
+
+                list += chat;
+
+            }
+            container.innerHTML = list;
+
+        }
+
+    })
+}
+
 
 setInterval(GetAllUsers, 1000);

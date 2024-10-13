@@ -254,6 +254,9 @@ namespace Zust.Entity.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("HasRequestPending")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
