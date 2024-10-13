@@ -194,6 +194,26 @@ namespace Zust.Entity.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Chats",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RecieverId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RecevierId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SenderId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chats_AspNetUsers_RecevierId",
+                        column: x => x.RecevierId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FriendRequest",
                 columns: table => new
                 {
@@ -257,6 +277,29 @@ namespace Zust.Entity.Migrations
                         name: "FK_Posts_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsImage = table.Column<bool>(type: "bit", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HasSeen = table.Column<bool>(type: "bit", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -341,6 +384,11 @@ namespace Zust.Entity.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Chats_RecevierId",
+                table: "Chats",
+                column: "RecevierId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_CustomUserId",
                 table: "Comments",
                 column: "CustomUserId");
@@ -369,6 +417,11 @@ namespace Zust.Entity.Migrations
                 name: "IX_Friends_YourFriendId",
                 table: "Friends",
                 column: "YourFriendId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ChatId",
+                table: "Messages",
+                column: "ChatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
@@ -404,6 +457,9 @@ namespace Zust.Entity.Migrations
                 name: "Friends");
 
             migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
@@ -411,6 +467,9 @@ namespace Zust.Entity.Migrations
 
             migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Chats");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

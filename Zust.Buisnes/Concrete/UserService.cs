@@ -33,6 +33,11 @@ namespace Zust.Business.Concrete
             return await userDal.GetByUsernameOrEmail(usernameOrEmail);
         }
 
+        public Task<List<CustomUser>> GetListAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task? Remove(CustomUser customUser)
         {
             await userDal.Remove(customUser);

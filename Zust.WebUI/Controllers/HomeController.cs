@@ -280,15 +280,56 @@ namespace Zust.WebUI.Controllers
             return View();
         }
 
-      
-  
+
         public async Task<IActionResult> Messages()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             ViewBag.User = user;
             return View();
         }
+            string id;
+        public async Task<IActionResult> GoChat()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            //ilk onde spesifik olaraq cari chat velli edirn  daha sonra Invoke edirirk.
+            var chat = await _context.Chats.Include(nameof(Chat.Messages)).FirstOrDefaultAsync(c => c.SenderId == user.Id && c.RecieverId == id ||
+            c.SenderId == id && c.RecieverId == user.Id);
+            if (chat == null)
+            {
+                chat = new Chat
+                {
+                    RecieverId = id,
+                    SenderId = user.Id,
+                    Messages = new List<Message>()
+                };
+                await _context.Chats.AddAsync(chat);
+                await _context.SaveChangesAsync();
+            }
 
+            var chats = _context.Chats.Include(nameof(Chat.Recevier)).Where(c => c.SenderId == user.Id || c.RecieverId == user.Id);
+            var chatBlock = from c in chats
+                            let reciver = (user.Id != c.RecieverId) ? c.Recevier : _context.Users.FirstOrDefault(u => u.Id == c.SenderId)
+                            select new Chat
+                            {
+                                Messages = c.Messages,
+                                Id = c.Id,
+                                SenderId = c.SenderId,
+                                Recevier = reciver,
+                                RecieverId = c.RecieverId
+                            };
+
+            var result = chatBlock.ToList().Where(c => c.RecieverId != user.Id);
+
+            var model = new ChatViewModel
+            {
+                CurrentUserId = user.Id,
+                CurrentChat = chat,
+                Chats = result
+
+            };
+
+            return View(model);
+        }
         //Notification
 
 
@@ -308,7 +349,7 @@ namespace Zust.WebUI.Controllers
         //}
 
         // Action to handle edit, hide, delete from dropdown menu
-      
+
 
         //public async Task<IActionResult> Notifications()
         //{

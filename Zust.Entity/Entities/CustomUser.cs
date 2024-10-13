@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Zust.Core.Entities;
 
 namespace Zust.Entity.Entities
@@ -30,6 +31,7 @@ namespace Zust.Entity.Entities
 
         public virtual ICollection<Friend>? Friends { get; set; }
         public virtual ICollection<FriendRequest>? FriendRequests { get; set; }
+        public virtual ICollection<Chat>? Chats { get; set; }
         public string? Fullname
         {
             get => Firstname + " " + Lastname;
@@ -52,6 +54,7 @@ namespace Zust.Entity.Entities
             Id = Guid.NewGuid().ToString();
             Friends = new List<Friend>();
             FriendRequests = new List<FriendRequest>(); 
+            Chats = new List<Chat>();
         }
     }
 }

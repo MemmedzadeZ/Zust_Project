@@ -47,6 +47,9 @@ namespace Zust.Entity.Data
         public DbSet<Notification> Notifications { get; set; }  // 'Notifications' yerine yanlışlıkla 'Notification' kullanmış olabilirsin.
         public DbSet<Friend> Friends { get; set; }
         public DbSet<FriendRequest> FriendRequest { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
 
     }
 }

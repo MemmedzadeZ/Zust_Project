@@ -11,6 +11,7 @@ namespace Zust.Business.Abstract
 
         Task? Remove(CustomUser customUser);
         Task<List<CustomUser>> GetAll(string userId);
+        Task<List<CustomUser>> GetListAsync();
         Task<List<CustomUser>>? GetAllUserByIsOnline(string id);
 
 
